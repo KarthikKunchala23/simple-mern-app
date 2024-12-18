@@ -71,7 +71,14 @@ jobs:
                   echo "Application stopped"
                 fi
 
-              
+            - name: install dependencies for frontend
+              run: npm install
+              working-directory: ./frontend
+
+            - name: start frontend
+              run: npm start
+              working-directory: ./frontend
+
 
 
 
