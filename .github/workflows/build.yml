@@ -15,7 +15,7 @@ jobs:
             - name: install mongo
               run: npm install mongoose
             - name: change to backend
-              run: cd /simple-mern-app/backend
+              run: ./simple-mern-app/backend
             - name: run backend
               run: node server.js
 
