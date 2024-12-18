@@ -57,7 +57,7 @@ jobs:
   # Job to check if MongoDB is running on backend EC2
   check-mongo:
     runs-on: ubuntu-latest
-    needs: deploy-backend  # Run this after the backend is deployed
+    needs: deploy-backend  # Run this after the backend is deployed.
     steps:
       - name: Check MongoDB connection
         run: |
