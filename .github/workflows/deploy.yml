@@ -24,11 +24,17 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ vars.FRONTEND_EC2_IP }} << 'EOF'
             cd ~
+            echo "Current directory: $(pwd)"
             if [ ! -d "frontend" ]; then
+              echo "Cloning the repository..."
               git clone https://github.com/KarthikKunchala23/simple-mern-app.git frontend
+            else
+              echo "Repository already exists, pulling latest changes..."
+              cd frontend
+              git pull origin master
             fi
             cd frontend
-            git pull origin master  # Pull the latest changes from master
+            # git pull origin master  # Pull the latest changes from master
             npm install  # Install dependencies
             npm run build  # Build the React app
             serve -s build -l 80  # Serve the React app on port 80
@@ -50,11 +56,17 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ vars.BACKEND_EC2_IP }} << 'EOF'
             cd ~
-            if [ ! -d "frontend" ]; then
+            echo "Current directory: $(pwd)"
+            if [ ! -d "backend" ]; then
+              echo "Cloning the repository..."
               git clone https://github.com/KarthikKunchala23/simple-mern-app.git backend
+            else
+              echo "Repository already exists, pulling latest changes..."
+              cd backend
+              git pull origin master
             fi
             cd backend
-            git pull origin master  # Pull the latest changes from master
+            # git pull origin master  # Pull the latest changes from master
             npm install  # Install dependencies
             npm run build  # Optional: If using build process for the backend (e.g., TypeScript)
             pm2 restart backend || pm2 start server.js --name backend
