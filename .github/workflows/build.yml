@@ -9,7 +9,7 @@ jobs:
             image: mongo:latest
             ports:
               - 27017:27017  # Expose MongoDB on port 27017
-            options:  --health-interval=10s --health-timeout=5s --health-retries=5
+            # options:  --health-interval=10s --health-timeout=5s --health-retries=5
 
         steps:
             - name: Get code
@@ -30,6 +30,13 @@ jobs:
             - name: change to backend
               run: npm install
               working-directory: ./backend
+
+            - name: Wait for MongoDB to be ready
+              run: |
+                until nc -zv localhost 27017; do
+                  echo "Waiting for MongoDB to start..."
+                  sleep 1
+                done
 
             - name: run backend
               run: node server.js
