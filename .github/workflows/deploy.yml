@@ -84,9 +84,10 @@ jobs:
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ vars.EC2_SSH_KEY }}
-          
+
       - name: Check MongoDB connection
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ vars.BACKEND_EC2_IP }} << 'EOF'
             sudo systemctl status mongod.service
+            echo "systemctl status mongod.service | grep active"
           EOF
