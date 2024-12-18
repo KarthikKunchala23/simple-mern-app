@@ -37,7 +37,7 @@ jobs:
             # git pull origin master  # Pull the latest changes from master
             npm install  # Install dependencies
             npm run build  # Build the React app
-            serve -s build -l 80  # Serve the React app on port 80
+            sudo serve -s build -l 80  # Serve the React app on port 80
           EOF
 
   deploy-backend:
