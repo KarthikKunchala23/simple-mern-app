@@ -89,5 +89,5 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ vars.BACKEND_EC2_IP }} << 'EOF'
             sudo systemctl status mongod.service
-            echo "systemctl status mongod.service | grep active"
+            sudo systemctl status mongod.service | grep active
           EOF
