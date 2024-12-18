@@ -25,7 +25,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.FRONTEND_EC2_IP }} << 'EOF'
             cd ~/frontend
-            git pull origin main  # Pull the latest changes from GitHub
+            git pull origin master  # Pull the latest changes from GitHub
             npm install  # Install dependencies
             npm run build  # Build the React app
             serve -s build -l 80  # Serve the React app on port 80
@@ -48,7 +48,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.BACKEND_EC2_IP }} << 'EOF'
             cd ~/backend
-            git pull origin main  # Pull the latest changes from GitHub
+            git pull origin master  # Pull the latest changes from GitHub
             npm install  # Install dependencies
             npm run build  # Optional: If using build process for the backend (e.g., TypeScript)
             pm2 restart backend || pm2 start server.js --name backend  # Use PM2 to manage the backend process
