@@ -39,6 +39,7 @@ jobs:
             npm run build  # Build the React app
             sudo serve -s build -l 80  # Serve the React app on port 80
           EOF
+        continue-on-error: false
 
   deploy-backend:
     runs-on: ubuntu-latest
@@ -71,6 +72,7 @@ jobs:
             npm run build  # Optional: If using build process for the backend (e.g., TypeScript)
             pm2 restart backend || pm2 start server.js --name backend
           EOF
+        continue-on-error: false
 
   check-mongo:
     runs-on: ubuntu-latest
