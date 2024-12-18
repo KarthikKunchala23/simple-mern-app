@@ -3,65 +3,69 @@ name: Deploy MERN Stack to EC2
 on:
   push:
     branches:
-      - master  # Trigger the pipeline when code is pushed to the main branch
+      - master  # Trigger the pipeline when code is pushed to the master branch
   pull_request:
     branches:
-      - master  # Trigger the pipeline on PRs to the main branch
+      - master  # Trigger the pipeline on PRs to the master branch
 
 jobs:
-  # Frontend job to deploy React app to frontend EC2 instance
   deploy-frontend:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
 
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.5.3
         with:
-          ssh-private-key: ${{ vars.EC2_SSH_KEY }}
+          ssh-private-key: ${{ vars.EC2_SSH_KEY }}  # Using environment-level secret
 
       - name: Deploy React app to EC2
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ vars.FRONTEND_EC2_IP }} << 'EOF'
-            cd ~/frontend
-            git pull origin master  # Pull the latest changes from GitHub
+            cd ~
+            if [ ! -d "frontend" ]; then
+              git clone https://github.com/KarthikKunchala23/simple-mern-app.git frontend
+            fi
+            cd frontend
+            git pull origin master  # Pull the latest changes from master
             npm install  # Install dependencies
             npm run build  # Build the React app
             serve -s build -l 80  # Serve the React app on port 80
           EOF
 
-  # Backend job to deploy Node.js + Express app to backend EC2 instance
   deploy-backend:
     runs-on: ubuntu-latest
-    needs: deploy-frontend  # Make sure the frontend is deployed first
+    needs: deploy-frontend
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
 
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.5.3
         with:
-          ssh-private-key: ${{ vars.EC2_SSH_KEY }}
+          ssh-private-key: ${{ vars.EC2_SSH_KEY }}  # Using environment-level secret
 
       - name: Deploy Express app to EC2
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ vars.BACKEND_EC2_IP }} << 'EOF'
-            cd ~/backend
-            git pull origin master  # Pull the latest changes from GitHub
+            cd ~
+            if [ ! -d "frontend" ]; then
+              git clone https://github.com/KarthikKunchala23/simple-mern-app.git backend
+            fi
+            cd backend
+            git pull origin master  # Pull the latest changes from master
             npm install  # Install dependencies
             npm run build  # Optional: If using build process for the backend (e.g., TypeScript)
-            pm2 restart backend || pm2 start server.js --name backend  # Use PM2 to manage the backend process
+            pm2 restart backend || pm2 start server.js --name backend
           EOF
 
-  # Job to check if MongoDB is running on backend EC2
   check-mongo:
     runs-on: ubuntu-latest
-    needs: deploy-backend  # Run this after the backend is deployed.
+    needs: deploy-backend
     steps:
       - name: Check MongoDB connection
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ vars.BACKEND_EC2_IP }} << 'EOF'
-            # Check if MongoDB is running
             sudo systemctl status mongod
           EOF
