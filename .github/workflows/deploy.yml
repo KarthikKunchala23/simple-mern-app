@@ -19,11 +19,11 @@ jobs:
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.5.3
         with:
-          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+          ssh-private-key: ${{ vars.EC2_SSH_KEY }}
 
       - name: Deploy React app to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.FRONTEND_EC2_IP }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ vars.FRONTEND_EC2_IP }} << 'EOF'
             cd ~/frontend
             git pull origin master  # Pull the latest changes from GitHub
             npm install  # Install dependencies
@@ -42,11 +42,11 @@ jobs:
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.5.3
         with:
-          ssh-private-key: ${{ secrets.EC2_SSH_KEY.EC2_SSH_KEY }}
+          ssh-private-key: ${{ vars.EC2_SSH_KEY }}
 
       - name: Deploy Express app to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.BACKEND_EC2_IP.BACKEND_EC2_IP }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ vars.BACKEND_EC2_IP }} << 'EOF'
             cd ~/backend
             git pull origin master  # Pull the latest changes from GitHub
             npm install  # Install dependencies
@@ -61,7 +61,7 @@ jobs:
     steps:
       - name: Check MongoDB connection
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.BACKEND_EC2_IP }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ vars.BACKEND_EC2_IP }} << 'EOF'
             # Check if MongoDB is running
             sudo systemctl status mongod
           EOF
