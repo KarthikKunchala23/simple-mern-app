@@ -21,7 +21,7 @@ jobs:
 
             - name: change to backend
               run: npm install
-              working-directory: ./simple-mern-app/backend
+              working-directory: ./backend
 
             - name: run backend
               run: node server.js
