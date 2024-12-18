@@ -1,5 +1,13 @@
 name: Deploy MERN Stack to EC2
-on: push  # Trigger the pipeline when code is pushed to the main branch
+
+on:
+  push:
+    branches:
+      - master  # Trigger the pipeline when code is pushed to the main branch
+  pull_request:
+    branches:
+      - master  # Trigger the pipeline on PRs to the main branch
+
 jobs:
   # Frontend job to deploy React app to frontend EC2 instance
   deploy-frontend:
