@@ -51,10 +51,11 @@ jobs:
         
                   # Verify ngrok installation
                   ngrok --version
-                  
+
             - name: Start the application
               run: |
                 nohup node server.js &  # Start the app in the background
+              working-directory: ./backend
       
             # Wait for 5 minutes (300 seconds)
             - name: Wait for 5 minutes
