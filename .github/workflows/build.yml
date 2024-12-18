@@ -38,9 +38,29 @@ jobs:
                   sleep 1
                 done
 
-            - name: run backend
-              run: node server.js
-              working-directory: ./backend
+            - name: Install ngrok
+              run: curl -s https://ngrok.com/download | tar xz && sudo mv ngrok /usr/local/bin
+              
+            - name: Start ngrok
+              run: ngrok http 5000 &
+
+            - name: Start the application
+              run: |
+                nohup node server.js &  # Start the app in the background
+      
+            # Wait for 5 minutes (300 seconds)
+            - name: Wait for 5 minutes
+              run: sleep 300  # This will sleep for 5 minutes
+      
+            # Stop the application (find the process and kill it)
+            - name: Stop the application
+              run: |
+                # Find the process ID (PID) for Node.js and kill it
+                pid=$(ps aux | grep 'node server.js' | awk '{print $2}')
+                if [ ! -z "$pid" ]; then
+                  kill $pid  # Stop the application
+                  echo "Application stopped"
+                fi
 
               
 
