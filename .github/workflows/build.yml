@@ -17,7 +17,7 @@ jobs:
 
             - name: install mongo
               run: npm install mongoose
-              working-directory: ./simple-mern-app/db
+              working-directory: ./simple-mern-app
 
             - name: change to backend
               run: npm install
