@@ -1,83 +1,83 @@
-name: build MernAppWorkflow
-on: push
-jobs:
-    build:
-        runs-on: ubuntu-latest
+# name: build MernAppWorkflow
+# on: push
+# jobs:
+#     build:
+#         runs-on: ubuntu-latest
 
-        services:
-          mongo:
-            image: mongo:latest
-            ports:
-              - 27017:27017  # Expose MongoDB on port 27017
-            # options:  --health-interval=10s --health-timeout=5s --health-retries=5
+#         services:
+#           mongo:
+#             image: mongo:latest
+#             ports:
+#               - 27017:27017  # Expose MongoDB on port 27017
+#             # options:  --health-interval=10s --health-timeout=5s --health-retries=5
 
-        steps:
-            - name: Get code
-              uses: actions/checkout@v4
+#         steps:
+#             - name: Get code
+#               uses: actions/checkout@v4
 
-            - name: Install Node.js
-              uses: actions/setup-node@v4
-              with:
-                node-version: 18
+#             - name: Install Node.js
+#               uses: actions/setup-node@v4
+#               with:
+#                 node-version: 18
 
-            - name: Install dependencies
-              run: npm ci
+#             - name: Install dependencies
+#               run: npm ci
 
-            - name: install mongo
-              run: npm install mongoose
-            #   working-directory: ./simple-mern-app
+#             - name: install mongo
+#               run: npm install mongoose
+#             #   working-directory: ./simple-mern-app
 
-            - name: change to backend
-              run: npm install
-              working-directory: ./backend
+#             - name: change to backend
+#               run: npm install
+#               working-directory: ./backend
 
-            - name: Wait for MongoDB to be ready
-              run: |
-                until nc -zv localhost 27017; do
-                  echo "Waiting for MongoDB to start..."
-                  sleep 1
-                done
+#             - name: Wait for MongoDB to be ready
+#               run: |
+#                 until nc -zv localhost 27017; do
+#                   echo "Waiting for MongoDB to start..."
+#                   sleep 1
+#                 done
 
-            - name: Download and Install ngrok
-              run: |
-                  # Download the ngrok zip for Linux (64-bit)
-                  curl -s https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip -o ngrok.zip
+#             - name: Download and Install ngrok
+#               run: |
+#                   # Download the ngrok zip for Linux (64-bit)
+#                   curl -s https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip -o ngrok.zip
         
-                  # Unzip the downloaded file
-                  unzip ngrok.zip
+#                   # Unzip the downloaded file
+#                   unzip ngrok.zip
         
-                  # Move ngrok to /usr/local/bin
-                  sudo mv ngrok /usr/local/bin/
+#                   # Move ngrok to /usr/local/bin
+#                   sudo mv ngrok /usr/local/bin/
         
-                  # Verify ngrok installation
-                  ngrok --version
+#                   # Verify ngrok installation
+#                   ngrok --version
 
-            - name: Start the application
-              run: |
-                nohup node server.js &  # Start the app in the background
-              working-directory: ./backend
+#             - name: Start the application
+#               run: |
+#                 nohup node server.js &  # Start the app in the background
+#               working-directory: ./backend
       
-            # Wait for 5 minutes (300 seconds)
-            - name: Wait for 5 minutes
-              run: sleep 300  # This will sleep for 5 minutes
+#             # Wait for 5 minutes (300 seconds)
+#             - name: Wait for 5 minutes
+#               run: sleep 300  # This will sleep for 5 minutes
       
-            # Stop the application (find the process and kill it)
-            - name: Stop the application
-              run: |
-                # Find the process ID (PID) for Node.js and kill it
-                pid=$(ps aux | grep 'node server.js' | awk '{print $2}')
-                if [ ! -z "$pid" ]; then
-                  kill $pid  # Stop the application
-                  echo "Application stopped"
-                fi
+#             # Stop the application (find the process and kill it)
+#             - name: Stop the application
+#               run: |
+#                 # Find the process ID (PID) for Node.js and kill it
+#                 pid=$(ps aux | grep 'node server.js' | awk '{print $2}')
+#                 if [ ! -z "$pid" ]; then
+#                   kill $pid  # Stop the application
+#                   echo "Application stopped"
+#                 fi
 
-            - name: install dependencies for frontend
-              run: npm install
-              working-directory: ./frontend
+#             - name: install dependencies for frontend
+#               run: npm install
+#               working-directory: ./frontend
 
-            - name: start frontend
-              run: npm start
-              working-directory: ./frontend
+#             - name: start frontend
+#               run: npm start
+#               working-directory: ./frontend
 
 
 

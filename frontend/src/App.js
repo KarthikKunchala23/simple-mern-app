@@ -40,7 +40,7 @@ function App() {
   // Fetch data from the backend
   useEffect(() => {
     axios
-      .get("http://localhost:5000")
+      .get("http://44.203.163.45:5000")
       .then((response) => {
         setMessage(response.data);
       })
